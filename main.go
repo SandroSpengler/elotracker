@@ -18,10 +18,14 @@ import (
 var DB *sql.DB
 
 func main() {
+	environment := os.Getenv("environment")
 
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	if environment != "production" {
+		err := godotenv.Load()
+
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
 	}
 
 	connectionString := os.Getenv("DATABASE_URL")
