@@ -1,0 +1,17 @@
+package home 
+
+import (
+	"github.com/sandrospengler/elotracker/models"
+	"github.com/sandrospengler/elotracker/views/layout"
+)
+
+templ Home(summoners models.SummonerSlice) {
+	@layout.Header()
+	@layout.Base() {
+		for _, summoner := range summoners {
+			<div>
+				Hello, { summoner.GameName }
+			</div>
+		}
+	}
+}

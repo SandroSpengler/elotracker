@@ -1,0 +1,39 @@
+package layout
+
+templ Base() {
+	<html lang="en" class="uk-theme-slate">
+		<head>
+			<link href="/assets/main.css?version=1" rel="stylesheet"/>
+			<link rel="stylesheet" href="/assets/frank-ui-core-1.1.0.css"/>
+			<script src="/assets/theme-toggle.js"></script>
+			<script src="/assets/htmx.min.js"></script>
+			<script src="/assets/franken-ui-core-1.1.0.js" type="module"></script>
+			<script src="/assets/franken-ui-core-icon-1.1.0.js" type="module"></script>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+			<title>Elotracker</title>
+		</head>
+		<script>
+            window.onload = function () {
+                let htmlElement = document.documentElement;
+
+                let mode = localStorage.getItem("mode");
+
+
+                if (!mode) {
+                    htmlElement.classList.add("dark");
+                    localStorage.setItem("mode", "dark");
+                    mode = "dark";
+                }
+
+                mode === "dark" ? htmlElement.classList.add("dark") : htmlElement.classList.remove("dark");
+            };
+        </script>
+		<body class="bg-background text-foreground">
+			<div class="uk-container">
+				{ children... }
+			</div>
+		</body>
+	</html>
+}

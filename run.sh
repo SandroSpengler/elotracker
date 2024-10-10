@@ -5,5 +5,5 @@ if [[ $runType == "go" ]]; then
 fi
 
 if [[ $runType == "tailwind" ]]; then
-    npx tailwindcss -i src/styles/tailwind.css -o assets/main.css --watch
+    npx tailwindcss -i styles/tailwind.css -o assets/main.css --watch
 fi
