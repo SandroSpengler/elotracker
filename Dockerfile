@@ -8,7 +8,7 @@ COPY . /app
 RUN CGO_ENABLED=0 GOOS=linux go build -o /entrypoint
 
 # Deploy.
-FROM debian AS release-stage
+FROM gcr.io/distroless/static-debian11 AS release-stage
 WORKDIR /
 ENV environment=production
 COPY --from=build-stage /entrypoint /entrypoint

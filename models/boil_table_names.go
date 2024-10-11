@@ -7,7 +7,9 @@ var TableNames = struct {
 	SQLXMigrations      string
 	League              string
 	Match               string
+	Player              string
 	RankedSeason        string
+	Socials             string
 	Summoner            string
 	SummonerMatches     string
 	SummonerNameHistory string
@@ -15,7 +17,9 @@ var TableNames = struct {
 	SQLXMigrations:      "_sqlx_migrations",
 	League:              "league",
 	Match:               "match",
+	Player:              "player",
 	RankedSeason:        "ranked_season",
+	Socials:             "socials",
 	Summoner:            "summoner",
 	SummonerMatches:     "summoner_matches",
 	SummonerNameHistory: "summoner_name_history",

@@ -94,56 +94,6 @@ var SummonerTableColumns = struct {
 
 // Generated where
 
-type whereHelpernull_String struct{ field string }
-
-func (w whereHelpernull_String) EQ(x null.String) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_String) NEQ(x null.String) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_String) LT(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_String) LTE(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_String) GT(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_String) GTE(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-func (w whereHelpernull_String) LIKE(x null.String) qm.QueryMod {
-	return qm.Where(w.field+" LIKE ?", x)
-}
-func (w whereHelpernull_String) NLIKE(x null.String) qm.QueryMod {
-	return qm.Where(w.field+" NOT LIKE ?", x)
-}
-func (w whereHelpernull_String) ILIKE(x null.String) qm.QueryMod {
-	return qm.Where(w.field+" ILIKE ?", x)
-}
-func (w whereHelpernull_String) NILIKE(x null.String) qm.QueryMod {
-	return qm.Where(w.field+" NOT ILIKE ?", x)
-}
-func (w whereHelpernull_String) IN(slice []string) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
-}
-func (w whereHelpernull_String) NIN(slice []string) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
-}
-
-func (w whereHelpernull_String) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_String) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
-
 type whereHelpernull_Int struct{ field string }
 
 func (w whereHelpernull_Int) EQ(x null.Int) qm.QueryMod {
@@ -248,15 +198,26 @@ var SummonerWhere = struct {
 
 // SummonerRels is where relationship names are stored.
 var SummonerRels = struct {
-}{}
+	PlayerNamePlayer string
+}{
+	PlayerNamePlayer: "PlayerNamePlayer",
+}
 
 // summonerR is where relationships are stored.
 type summonerR struct {
+	PlayerNamePlayer *Player `boil:"PlayerNamePlayer" json:"PlayerNamePlayer" toml:"PlayerNamePlayer" yaml:"PlayerNamePlayer"`
 }
 
 // NewStruct creates a new relationship struct
 func (*summonerR) NewStruct() *summonerR {
 	return &summonerR{}
+}
+
+func (r *summonerR) GetPlayerNamePlayer() *Player {
+	if r == nil {
+		return nil
+	}
+	return r.PlayerNamePlayer
 }
 
 // summonerL is where Load methods for each relationship are stored.
@@ -573,6 +534,221 @@ func (q summonerQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (b
 	}
 
 	return count > 0, nil
+}
+
+// PlayerNamePlayer pointed to by the foreign key.
+func (o *Summoner) PlayerNamePlayer(mods ...qm.QueryMod) playerQuery {
+	queryMods := []qm.QueryMod{
+		qm.Where("\"player_name\" = ?", o.PlayerName),
+	}
+
+	queryMods = append(queryMods, mods...)
+
+	return Players(queryMods...)
+}
+
+// LoadPlayerNamePlayer allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for an N-1 relationship.
+func (summonerL) LoadPlayerNamePlayer(ctx context.Context, e boil.ContextExecutor, singular bool, maybeSummoner interface{}, mods queries.Applicator) error {
+	var slice []*Summoner
+	var object *Summoner
+
+	if singular {
+		var ok bool
+		object, ok = maybeSummoner.(*Summoner)
+		if !ok {
+			object = new(Summoner)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeSummoner)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeSummoner))
+			}
+		}
+	} else {
+		s, ok := maybeSummoner.(*[]*Summoner)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeSummoner)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeSummoner))
+			}
+		}
+	}
+
+	args := make(map[interface{}]struct{})
+	if singular {
+		if object.R == nil {
+			object.R = &summonerR{}
+		}
+		if !queries.IsNil(object.PlayerName) {
+			args[object.PlayerName] = struct{}{}
+		}
+
+	} else {
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &summonerR{}
+			}
+
+			if !queries.IsNil(obj.PlayerName) {
+				args[obj.PlayerName] = struct{}{}
+			}
+
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	argsSlice := make([]interface{}, len(args))
+	i := 0
+	for arg := range args {
+		argsSlice[i] = arg
+		i++
+	}
+
+	query := NewQuery(
+		qm.From(`player`),
+		qm.WhereIn(`player.player_name in ?`, argsSlice...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load Player")
+	}
+
+	var resultSlice []*Player
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice Player")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results of eager load for player")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for player")
+	}
+
+	if len(playerAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if len(resultSlice) == 0 {
+		return nil
+	}
+
+	if singular {
+		foreign := resultSlice[0]
+		object.R.PlayerNamePlayer = foreign
+		if foreign.R == nil {
+			foreign.R = &playerR{}
+		}
+		foreign.R.PlayerNameSummoners = append(foreign.R.PlayerNameSummoners, object)
+		return nil
+	}
+
+	for _, local := range slice {
+		for _, foreign := range resultSlice {
+			if queries.Equal(local.PlayerName, foreign.PlayerName) {
+				local.R.PlayerNamePlayer = foreign
+				if foreign.R == nil {
+					foreign.R = &playerR{}
+				}
+				foreign.R.PlayerNameSummoners = append(foreign.R.PlayerNameSummoners, local)
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// SetPlayerNamePlayer of the summoner to the related item.
+// Sets o.R.PlayerNamePlayer to related.
+// Adds o to related.R.PlayerNameSummoners.
+func (o *Summoner) SetPlayerNamePlayer(ctx context.Context, exec boil.ContextExecutor, insert bool, related *Player) error {
+	var err error
+	if insert {
+		if err = related.Insert(ctx, exec, boil.Infer()); err != nil {
+			return errors.Wrap(err, "failed to insert into foreign table")
+		}
+	}
+
+	updateQuery := fmt.Sprintf(
+		"UPDATE \"summoner\" SET %s WHERE %s",
+		strmangle.SetParamNames("\"", "\"", 1, []string{"player_name"}),
+		strmangle.WhereClause("\"", "\"", 2, summonerPrimaryKeyColumns),
+	)
+	values := []interface{}{related.PlayerName, o.Puuid}
+
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, updateQuery)
+		fmt.Fprintln(writer, values)
+	}
+	if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+		return errors.Wrap(err, "failed to update local table")
+	}
+
+	queries.Assign(&o.PlayerName, related.PlayerName)
+	if o.R == nil {
+		o.R = &summonerR{
+			PlayerNamePlayer: related,
+		}
+	} else {
+		o.R.PlayerNamePlayer = related
+	}
+
+	if related.R == nil {
+		related.R = &playerR{
+			PlayerNameSummoners: SummonerSlice{o},
+		}
+	} else {
+		related.R.PlayerNameSummoners = append(related.R.PlayerNameSummoners, o)
+	}
+
+	return nil
+}
+
+// RemovePlayerNamePlayer relationship.
+// Sets o.R.PlayerNamePlayer to nil.
+// Removes o from all passed in related items' relationships struct.
+func (o *Summoner) RemovePlayerNamePlayer(ctx context.Context, exec boil.ContextExecutor, related *Player) error {
+	var err error
+
+	queries.SetScanner(&o.PlayerName, nil)
+	if _, err = o.Update(ctx, exec, boil.Whitelist("player_name")); err != nil {
+		return errors.Wrap(err, "failed to update local table")
+	}
+
+	if o.R != nil {
+		o.R.PlayerNamePlayer = nil
+	}
+	if related == nil || related.R == nil {
+		return nil
+	}
+
+	for i, ri := range related.R.PlayerNameSummoners {
+		if queries.Equal(o.PlayerName, ri.PlayerName) {
+			continue
+		}
+
+		ln := len(related.R.PlayerNameSummoners)
+		if ln > 1 && i < ln-1 {
+			related.R.PlayerNameSummoners[i] = related.R.PlayerNameSummoners[ln-1]
+		}
+		related.R.PlayerNameSummoners = related.R.PlayerNameSummoners[:ln-1]
+		break
+	}
+	return nil
 }
 
 // Summoners retrieves all the records using an executor.
