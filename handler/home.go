@@ -1,36 +1,42 @@
 package handler
 
 import (
-	"context"
 	"fmt"
 	"log"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/sandrospengler/elotracker/dtos"
-	"github.com/sandrospengler/elotracker/models"
 	"github.com/sandrospengler/elotracker/views/home"
-	"github.com/volatiletech/sqlboiler/v4/boil"
+
+	"github.com/sandrospengler/elotracker/models/elotracker/public/model"
+	"github.com/sandrospengler/elotracker/models/elotracker/public/table"
+	"github.com/sandrospengler/elotracker/database"
+
+	. "github.com/go-jet/jet/v2/postgres"
 )
 
 type HomeHandler struct{}
 
 func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 
-	ctx := context.Background()
-
 	var summonerDtos []dtos.SummonerDto
-	var summoners, err = models.Summoners().All(ctx, boil.GetContextDB())
+
+	stmt := SELECT(table.Summoner.AllColumns).FROM(
+		table.Summoner.
+			INNER_JOIN(table.Socials, table.Socials.PlayerName.EQ(table.Summoner.PlayerName)),
+	)
+
+	var dest []struct {
+		model.Summoner
+		model.Socials
+	}
+
+	err := stmt.Query(database.DB, &dest)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var summonerLevel = summoners[0].SummonerLevel
-	s := strconv.FormatInt(summonerLevel.Int64, 10)
-
-	log.Println(s)
-
-	for _, summoner := range summoners {
+	for _, summoner := range dest {
 
 		summonerDto := dtos.SummonerDto{}
 
@@ -40,12 +46,12 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 		summonerDto.SumonerProfileIconUrl =
 			"https://opgg-static.akamaized.net/meta/images/profile_icons/profileIcon0.jpg?image=q_auto,f_webp,w_auto&v=1710914129937"
 
-		if summoner.SummonerLevel.Valid {
-			summonerDto.SummonerLevel = summoner.SummonerLevel.Int64
+		if summoner.SummonerLevel != nil {
+			summonerDto.SummonerLevel = int64(*summoner.SummonerLevel)
 		}
 
-		if summoner.ProfileIconID.Valid {
-			profileIconId := summoner.ProfileIconID.Int
+		if summoner.ProfileIconID != nil {
+			profileIconId := int64(*summoner.ProfileIconID)
 
 			summonerDto.SumonerProfileIconUrl =
 				fmt.Sprintf("https://opgg-static.akamaized.net/meta/images/profile_icons/profileIcon%d.jpg?image=q_auto,f_webp,w_auto&v=1710914129937", profileIconId)
