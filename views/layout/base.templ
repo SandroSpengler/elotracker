@@ -25,9 +25,13 @@ templ Base() {
                     htmlElement.classList.add("dark");
                     localStorage.setItem("mode", "dark");
                     mode = "dark";
+
+					replaceIcons(mode)
                 }
 
                 mode === "dark" ? htmlElement.classList.add("dark") : htmlElement.classList.remove("dark");
+
+				replaceIcons(mode)
             };
         </script>
 		<body class="bg-background text-foreground">

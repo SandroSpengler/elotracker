@@ -15,34 +15,63 @@ templ Home(summoners []dtos.SummonerDto) {
 					<div
 						class="uk-card uk-card-body uk-card-default group cursor-pointer"
 					>
-						<div class="flex gap-x-2">
-							<div class="relative text-center">
-								<img
-									class="w-24 h-24 min-w-24 min-h-24"
-									loading="lazy"
-									src={ summoner.SumonerProfileIconUrl }
-								/>
-								<p class="absolute bottom-0 inset-x-0 rounded-xl uk-background-default w-5/12 mx-auto">
-									{ strconv.FormatInt(summoner.SummonerLevel, 10) }
-								</p>
+						<div class="flex justify-between">
+							<div class="flex gap-x-2">
+								<div>
+									<div class="relative text-center">
+										<img
+											class="w-14 h-14 md:w-24 md:h-24"
+											class
+											loading="lazy"
+											src={ summoner.SumonerProfileIconUrl }
+										/>
+										<p class="absolute bottom-0 inset-x-0 rounded-xl uk-background-default w-6/12 md:w-4/12 mx-auto text-xs md:text-sm">
+											{ strconv.FormatInt(summoner.SummonerLevel, 10) }
+										</p>
+									</div>
+								</div>
+								<div class="flex gap-x-1 md:gap-x-2">
+									<p class="uk-text-bold text-sm md:text-base">{ summoner.GameName }</p>
+									<p class="uk-text-muted text-sm md:text-base">#{ summoner.TagLine }</p>
+								</div>
 							</div>
 							<div>
-								<div class="flex gap-x-2">
-									<p class="uk-text-bold">{ summoner.GameName }</p>
-									<p class="uk-text-muted">#{ summoner.TagLine }</p>
+								<div class="flex">
+									<div>
+										<a href="" class="uk-icon-button w-4 h-4">
+											<img id="socialIcon" class="w-4 h-4" loading="lazy" src="/assets/svg/twitch.svg"/>
+										</a>
+									</div>
+									<div>
+										<a href="" class="uk-icon-button w-4 h-4">
+											<img id="socialIcon" class="w-4 h-4" loading="lazy" src="/assets/svg/youtube.svg"/>
+										</a>
+									</div>
 								</div>
-								// if summoner.has_solo_rank {
-								// 	<div>
-								// 		<div class="flex gap-x-2">
-								// 			<p>{ summoner.solo_rank_wins }W</p>
-								// 			<p>{ summoner.solo_rank_losses }L</p>
-								// 		</div>
-								// 		<div class="flex gap-x-2">
-								// 			<p class="uk-text-muted">Win Rate</p>
-								// 			<p>{ summoner.solo_rank_winrate }%</p>
-								// 		</div>
-								// 	</div>
-								// }
+								<div class="flex">
+									<div>
+										<a href="" class="uk-icon-button w-4 h-4">
+											<img id="socialIcon" class="w-4 h-4" loading="lazy" src="/assets/svg/tiktok.svg"/>
+										</a>
+									</div>
+									<div>
+										<a href="" class="uk-icon-button w-4 h-4">
+											<img id="socialIcon" class="w-4 h-4" loading="lazy" src="/assets/svg/twitch.svg"/>
+										</a>
+									</div>
+								</div>
+								<div class="flex">
+									<div>
+										<a href="" class="uk-icon-button w-4 h-4">
+											<img id="socialIcon" class="w-4 h-4" loading="lazy" src="/assets/svg/x.svg"/>
+										</a>
+									</div>
+									<div>
+										<a href="" class="uk-icon-button w-4 h-4">
+											<img id="socialIcon" class="w-4 h-4" loading="lazy" src="/assets/svg/instagram.svg"/>
+										</a>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
