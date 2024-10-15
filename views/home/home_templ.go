@@ -51,12 +51,12 @@ func Home(summoners []dtos.SummonerDto) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 1)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"uk-grid uk-grid-small data-uk-grid-match\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, summoner := range summoners {
-				templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 2)
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"uk-width-1-1 uk-grid-margin\"><div class=\"uk-card uk-card-body uk-card-default group cursor-pointer\"><div class=\"flex justify-between\"><div class=\"flex gap-x-2\"><div><div class=\"relative text-center\"><img class=\"w-14 h-14 md:w-20 md:h-20\" class loading=\"lazy\" src=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -69,7 +69,7 @@ func Home(summoners []dtos.SummonerDto) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 3)
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><p class=\"absolute bottom-0 inset-x-0 rounded-xl uk-background-default w-6/12 md:w-4/12 mx-auto text-xs md:text-sm\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -82,7 +82,7 @@ func Home(summoners []dtos.SummonerDto) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 4)
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p></div></div><div class=\"flex gap-x-1 md:gap-x-2\"><p class=\"uk-text-bold text-sm md:text-base\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -95,7 +95,7 @@ func Home(summoners []dtos.SummonerDto) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 5)
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><p class=\"uk-text-muted text-sm md:text-base\">#")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -108,12 +108,12 @@ func Home(summoners []dtos.SummonerDto) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 6)
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p></div></div><div><div class=\"flex\"><div><a href=\"\" class=\"uk-icon-button w-4 h-4\"><img id=\"socialIcon\" class=\"w-4 h-4\" loading=\"lazy\" src=\"/assets/svg/twitch.svg\"></a></div><div><a href=\"\" class=\"uk-icon-button w-4 h-4\"><img id=\"socialIcon\" class=\"w-4 h-4\" loading=\"lazy\" src=\"/assets/svg/youtube.svg\"></a></div></div><div class=\"flex\"><div><a href=\"\" class=\"uk-icon-button w-4 h-4\"><img id=\"socialIcon\" class=\"w-4 h-4\" loading=\"lazy\" src=\"/assets/svg/tiktok.svg\"></a></div><div><a href=\"\" class=\"uk-icon-button w-4 h-4\"><img id=\"socialIcon\" class=\"w-4 h-4\" loading=\"lazy\" src=\"/assets/svg/twitch.svg\"></a></div></div><div class=\"flex\"><div><a href=\"\" class=\"uk-icon-button w-4 h-4\"><img id=\"socialIcon\" class=\"w-4 h-4\" loading=\"lazy\" src=\"/assets/svg/x.svg\"></a></div><div><a href=\"\" class=\"uk-icon-button w-4 h-4\"><img id=\"socialIcon\" class=\"w-4 h-4\" loading=\"lazy\" src=\"/assets/svg/instagram.svg\"></a></div></div></div></div></div></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 7)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
