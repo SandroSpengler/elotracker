@@ -53,6 +53,7 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 
 	for _, row := range dbRows {
 		summonerDto := dtos.SummonerDto{}
+		socialsDto := dtos.SocialsDto{}
 
 		summonerDto.GameName = row.GameName
 		summonerDto.TagLine = row.TagLine
@@ -71,6 +72,17 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 				fmt.Sprintf("https://opgg-static.akamaized.net/meta/images/profile_icons/profileIcon%d.jpg?image=q_auto,f_webp,w_auto&v=1710914129937",
 					profileIconId)
 		}
+
+		socialsDto.PlayerName = row.Socials.PlayerName
+		socialsDto.IconName = DerefString(row.Socials.IconName)
+		socialsDto.DiscordLink = DerefString(row.Socials.DiscordLink)
+		socialsDto.InstagramLink = DerefString(row.Socials.InstagramLink)
+		socialsDto.TiktokLink = DerefString(row.Socials.TiktokLink)
+		socialsDto.TwitterLink = DerefString(row.Socials.TwitterLink)
+		socialsDto.TwitchLink = DerefString(row.Socials.TwitchLink)
+		socialsDto.YoutubeLink = DerefString(row.Socials.YoutubeLink)
+
+		summonerDto.Socials = socialsDto
 
 		summonerDtos = append(summonerDtos, summonerDto)
 	}
@@ -115,4 +127,12 @@ func sortByMostRecentMatch(rows *[]summonerRow) *[]summonerRow {
 	})
 
 	return rows
+}
+
+func DerefString(s *string) string {
+	if s != nil {
+		return *s
+	}
+
+	return ""
 }

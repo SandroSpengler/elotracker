@@ -25,6 +25,7 @@ type socialsTable struct {
 	TwitterLink   postgres.ColumnString
 	TwitchLink    postgres.ColumnString
 	YoutubeLink   postgres.ColumnString
+	IconName      postgres.ColumnString
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -73,8 +74,9 @@ func newSocialsTableImpl(schemaName, tableName, alias string) socialsTable {
 		TwitterLinkColumn   = postgres.StringColumn("twitter_link")
 		TwitchLinkColumn    = postgres.StringColumn("twitch_link")
 		YoutubeLinkColumn   = postgres.StringColumn("youtube_link")
-		allColumns          = postgres.ColumnList{IDColumn, PlayerNameColumn, DiscordLinkColumn, InstagramLinkColumn, TiktokLinkColumn, TwitterLinkColumn, TwitchLinkColumn, YoutubeLinkColumn}
-		mutableColumns      = postgres.ColumnList{PlayerNameColumn, DiscordLinkColumn, InstagramLinkColumn, TiktokLinkColumn, TwitterLinkColumn, TwitchLinkColumn, YoutubeLinkColumn}
+		IconNameColumn      = postgres.StringColumn("icon_name")
+		allColumns          = postgres.ColumnList{IDColumn, PlayerNameColumn, DiscordLinkColumn, InstagramLinkColumn, TiktokLinkColumn, TwitterLinkColumn, TwitchLinkColumn, YoutubeLinkColumn, IconNameColumn}
+		mutableColumns      = postgres.ColumnList{PlayerNameColumn, DiscordLinkColumn, InstagramLinkColumn, TiktokLinkColumn, TwitterLinkColumn, TwitchLinkColumn, YoutubeLinkColumn, IconNameColumn}
 	)
 
 	return socialsTable{
@@ -89,6 +91,7 @@ func newSocialsTableImpl(schemaName, tableName, alias string) socialsTable {
 		TwitterLink:   TwitterLinkColumn,
 		TwitchLink:    TwitchLinkColumn,
 		YoutubeLink:   YoutubeLinkColumn,
+		IconName:      IconNameColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

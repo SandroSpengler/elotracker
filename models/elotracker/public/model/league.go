@@ -12,11 +12,11 @@ import (
 )
 
 type League struct {
-	LeagueID         string `sql:"primary_key"`
+	LeagueID         string
 	QueueType        string
 	Tier             string
 	Rank             string
-	SummonerID       string `sql:"primary_key"`
+	SummonerID       string
 	LeaguePoints     int32
 	Wins             int32
 	Losses           int32
@@ -24,5 +24,6 @@ type League struct {
 	Inactive         bool
 	Freshblood       bool
 	Hotstreak        bool
-	LastLeagueUpdate *time.Time
+	LastLeagueUpdate time.Time
+	ID               int64 `sql:"primary_key"`
 }

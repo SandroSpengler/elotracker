@@ -16,4 +16,5 @@ type Socials struct {
 	TwitterLink   *string
 	TwitchLink    *string
 	YoutubeLink   *string
+	IconName      *string
 }

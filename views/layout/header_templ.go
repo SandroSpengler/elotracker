@@ -29,7 +29,7 @@ func Header() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><nav class=\"uk-navbar-container\"><div class=\"uk-container\"><div uk-navbar><div class=\"uk-navbar-left\"><ul class=\"uk-navbar-nav\"><li><a href=\"/\" class=\"uk-link-text\"><span class=\"text-xl\">Elotracker</span></a></li><li><a href=\"http://klixz.axfert.com\" class=\"uk-link-text\"><span class=\"text-xl\">Klixz</span></a></li></ul></div><div class=\"uk-navbar-right\"><div class=\"items-center py-2 pr-3\"><button class=\"uk-icon-button\" onclick=\"themeToggle()\"><uk-icon icon=\"palette\" class=\"uk-cloak\"></uk-icon></button></div></div></div></div></nav></div>")
+		templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 1)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

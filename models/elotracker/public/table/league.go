@@ -30,6 +30,7 @@ type leagueTable struct {
 	Freshblood       postgres.ColumnBool
 	Hotstreak        postgres.ColumnBool
 	LastLeagueUpdate postgres.ColumnTimestamp
+	ID               postgres.ColumnInteger
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -83,8 +84,9 @@ func newLeagueTableImpl(schemaName, tableName, alias string) leagueTable {
 		FreshbloodColumn       = postgres.BoolColumn("freshblood")
 		HotstreakColumn        = postgres.BoolColumn("hotstreak")
 		LastLeagueUpdateColumn = postgres.TimestampColumn("last_league_update")
-		allColumns             = postgres.ColumnList{LeagueIDColumn, QueueTypeColumn, TierColumn, RankColumn, SummonerIDColumn, LeaguePointsColumn, WinsColumn, LossesColumn, VeteranColumn, InactiveColumn, FreshbloodColumn, HotstreakColumn, LastLeagueUpdateColumn}
-		mutableColumns         = postgres.ColumnList{QueueTypeColumn, TierColumn, RankColumn, LeaguePointsColumn, WinsColumn, LossesColumn, VeteranColumn, InactiveColumn, FreshbloodColumn, HotstreakColumn, LastLeagueUpdateColumn}
+		IDColumn               = postgres.IntegerColumn("id")
+		allColumns             = postgres.ColumnList{LeagueIDColumn, QueueTypeColumn, TierColumn, RankColumn, SummonerIDColumn, LeaguePointsColumn, WinsColumn, LossesColumn, VeteranColumn, InactiveColumn, FreshbloodColumn, HotstreakColumn, LastLeagueUpdateColumn, IDColumn}
+		mutableColumns         = postgres.ColumnList{LeagueIDColumn, QueueTypeColumn, TierColumn, RankColumn, SummonerIDColumn, LeaguePointsColumn, WinsColumn, LossesColumn, VeteranColumn, InactiveColumn, FreshbloodColumn, HotstreakColumn, LastLeagueUpdateColumn}
 	)
 
 	return leagueTable{
@@ -104,6 +106,7 @@ func newLeagueTableImpl(schemaName, tableName, alias string) leagueTable {
 		Freshblood:       FreshbloodColumn,
 		Hotstreak:        HotstreakColumn,
 		LastLeagueUpdate: LastLeagueUpdateColumn,
+		ID:               IDColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,
