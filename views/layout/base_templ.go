@@ -29,7 +29,7 @@ func Base() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 1)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html lang=\"en\" class=\"uk-theme-slate\"><head><link href=\"/assets/main.css?version=1\" rel=\"stylesheet\"><link rel=\"stylesheet\" href=\"/assets/frank-ui-core-1.1.0.css\"><script src=\"/assets/theme-toggle.js\"></script><script src=\"/assets/htmx.min.js\"></script><script src=\"/assets/franken-ui-core-1.1.0.js\" type=\"module\"></script><script src=\"/assets/franken-ui-core-icon-1.1.0.js\" type=\"module\"></script><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><title>Elotracker</title></head><script>\n            window.onload = function () {\n                let htmlElement = document.documentElement;\n\n                let mode = localStorage.getItem(\"mode\");\n\n\n                if (!mode) {\n                    htmlElement.classList.add(\"dark\");\n                    localStorage.setItem(\"mode\", \"dark\");\n                    mode = \"dark\";\n\n\t\t\t\t\treplaceIcons(mode)\n                }\n\n                mode === \"dark\" ? htmlElement.classList.add(\"dark\") : htmlElement.classList.remove(\"dark\");\n\n\t\t\t\treplaceIcons(mode)\n            };\n        </script><body class=\"bg-background text-foreground\"><div class=\"uk-container\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -37,7 +37,7 @@ func Base() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 2)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
