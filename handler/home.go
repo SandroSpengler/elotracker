@@ -27,6 +27,10 @@ type summonerRow struct {
 	}
 }
 
+type leagueRow struct {
+	model.League
+}
+
 func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 	var summonerDtos []dtos.SummonerDto
 
@@ -42,21 +46,41 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 		table.SummonerMatches.QueueID.EQ(String("420")),
 	)
 
-	dbRows := []summonerRow{}
+	leagueStmt := SELECT(
+		table.League.AllColumns,
+	).FROM(
+		table.League,
+	).WHERE(
+		table.League.QueueType.EQ(String("RANKED_SOLO_5x5")).
+			AND(table.League.LastLeagueUpdate.GT(Timestamp(2024, 9, 25, 8, 0, 0))),
+	).ORDER_BY(
+		table.League.LastLeagueUpdate.DESC(),
+	)
 
-	err := summonerStmt.Query(database.DB, &dbRows)
+	summonerRows := []summonerRow{}
+	leagueRows := []leagueRow{}
+
+	err := summonerStmt.Query(database.DB, &summonerRows)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	dbRows = *sortByMostRecentMatch(&dbRows)
+	err = leagueStmt.Query(database.DB, &leagueRows)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	for _, row := range dbRows {
+	summonerRows = *sortByMostRecentMatch(&summonerRows)
+
+	for _, row := range summonerRows {
 		summonerDto := dtos.SummonerDto{}
 		socialsDto := dtos.SocialsDto{}
 
+		summonerLeagues := []dtos.LeagueDto{}
+
 		summonerDto.GameName = row.GameName
 		summonerDto.TagLine = row.TagLine
+		summonerDto.HasRankedSolo5x5 = false
 		summonerDto.SummonerLevel = 0
 		summonerDto.SumonerProfileIconUrl =
 			"https://opgg-static.akamaized.net/meta/images/profile_icons/profileIcon0.jpg?image=q_auto,f_webp,w_auto&v=1710914129937"
@@ -83,6 +107,28 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 		socialsDto.YoutubeLink = DerefString(row.Socials.YoutubeLink)
 
 		summonerDto.Socials = socialsDto
+
+		for _, league := range leagueRows {
+			if league.SummonerID == *row.Summoner.ID && league.QueueType == "RANKED_SOLO_5x5" {
+				leagueDto := dtos.LeagueDto{}
+
+				leagueDto.Tier = league.Tier
+				leagueDto.Rank = league.Rank
+				leagueDto.LeaguePoints = league.LeaguePoints
+				leagueDto.Wins = league.Wins
+				leagueDto.Losses = league.Losses
+				leagueDto.LastLeagueUpdate = league.LastLeagueUpdate
+
+				summonerLeagues = append(summonerLeagues, leagueDto)
+
+			}
+		}
+
+		if len(summonerLeagues) > 0 {
+			summonerDto.HasRankedSolo5x5 = true
+			summonerDto.League = summonerLeagues[0]
+			summonerDto.Winrate = calculateWinrate(summonerDto.League.Wins, summonerDto.League.Losses)
+		}
 
 		summonerDtos = append(summonerDtos, summonerDto)
 	}
@@ -127,6 +173,23 @@ func sortByMostRecentMatch(rows *[]summonerRow) *[]summonerRow {
 	})
 
 	return rows
+}
+
+func calculateWinrate(wins int32, losses int32) float32 {
+
+	if wins == 0 && losses == 0 {
+		return 0.0
+	}
+
+	if wins == 0 && losses != 0 {
+		return 0.0
+	}
+
+	if wins != 0 && losses == 0 {
+		return 0.0
+	}
+
+	return float32(wins) / float32(wins+losses)
 }
 
 func DerefString(s *string) string {

@@ -571,9 +571,21 @@ video {
   bottom: 0px;
 }
 
+.m-0 {
+  margin: 0px;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mt-12 {
+  margin-top: 3rem;
 }
 
 .flex {
@@ -612,6 +624,10 @@ video {
   justify-content: space-between;
 }
 
+.gap-2 {
+  gap: 0.5rem;
+}
+
 .gap-x-1 {
   -moz-column-gap: 0.25rem;
        column-gap: 0.25rem;
@@ -620,6 +636,10 @@ video {
 .gap-x-2 {
   -moz-column-gap: 0.5rem;
        column-gap: 0.5rem;
+}
+
+.gap-y-2 {
+  row-gap: 0.5rem;
 }
 
 .rounded-xl {
