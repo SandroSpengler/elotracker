@@ -1,0 +1,23 @@
+package components
+
+templ PlayerSelector() {
+	<div>
+		<uk-select
+			id="playerSelect"
+			searchable
+			multiple
+			hx-get="/"
+			hx-trigger="uk-select:input"
+			hx-vals="js:{selectedSummoners: selectParamConverter(event)}"
+			hx-boost="true"
+			hx-target="#body"
+		>
+			<option selected value="test">
+				test
+			</option>
+			<option value="test1">
+				test1
+			</option>
+		</uk-select>
+	</div>
+}

@@ -1,0 +1,56 @@
+package components
+
+import "github.com/sandrospengler/elotracker/dtos"
+
+templ SocialIcons(summoner dtos.SummonerDto) {
+	<div>
+		<div class="flex">
+			if summoner.Socials.TwitchLink != "" {
+				<div>
+					<a href={ templ.SafeURL(summoner.Socials.TwitchLink) } target="_blank" class="uk-icon-button w-4 h-4">
+						<img id="socialIcon" class="w-4 h-4" loading="lazy" src="/assets/svg/twitch.svg"/>
+					</a>
+				</div>
+			}
+			if summoner.Socials.InstagramLink != "" {
+				<div>
+					<a href={ templ.SafeURL(summoner.Socials.InstagramLink) } target="_blank" class="uk-icon-button w-4 h-4">
+						<img id="socialIcon" class="w-4 h-4" loading="lazy" src="/assets/svg/instagram.svg"/>
+					</a>
+				</div>
+			}
+		</div>
+		<div class="flex">
+			if summoner.Socials.YoutubeLink != "" {
+				<div>
+					<a href={ templ.SafeURL(summoner.Socials.YoutubeLink) } target="_blank" class="uk-icon-button w-4 h-4">
+						<img id="socialIcon" class="w-4 h-4" loading="lazy" src="/assets/svg/youtube.svg"/>
+					</a>
+				</div>
+			}
+			if summoner.Socials.TiktokLink != "" {
+				<div>
+					<a href={ templ.SafeURL(summoner.Socials.TiktokLink) } target="_blank" class="uk-icon-button w-4 h-4">
+						<img id="socialIcon" class="w-4 h-4" loading="lazy" src="/assets/svg/tiktok.svg"/>
+					</a>
+				</div>
+			}
+		</div>
+		<div class="flex">
+			if summoner.Socials.TwitterLink != "" {
+				<div>
+					<a href={ templ.SafeURL(summoner.Socials.TwitterLink) } target="_blank" class="uk-icon-button w-4 h-4">
+						<img id="socialIcon" class="w-4 h-4" loading="lazy" src="/assets/svg/x.svg"/>
+					</a>
+				</div>
+			}
+			if summoner.Socials.DiscordLink != "" {
+				<div>
+					<a href={ templ.SafeURL(summoner.Socials.DiscordLink) } target="_blank" class="uk-icon-button w-4 h-4">
+						<img id="socialIcon" class="w-4 h-4" loading="lazy" src="/assets/svg/discord.svg"/>
+					</a>
+				</div>
+			}
+		</div>
+	</div>
+}

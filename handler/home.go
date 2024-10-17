@@ -32,6 +32,10 @@ type leagueRow struct {
 }
 
 func (h HomeHandler) HandleHomeShow(c echo.Context) error {
+	selectedSummoners := c.QueryParam("selectedSummoners")
+
+	log.Println(selectedSummoners)
+
 	var summonerDtos []dtos.SummonerDto
 
 	summonerStmt := SELECT(
