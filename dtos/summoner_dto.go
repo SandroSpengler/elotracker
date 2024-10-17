@@ -32,3 +32,8 @@ type LeagueDto struct {
 	Losses           int32
 	LastLeagueUpdate time.Time
 }
+
+type PlayerNameDto struct {
+	PlayerName string
+	Selected   bool
+}

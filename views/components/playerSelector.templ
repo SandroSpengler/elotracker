@@ -1,23 +1,23 @@
 package components
 
-templ PlayerSelector() {
-	<div>
-		<uk-select
-			id="playerSelect"
-			searchable
-			multiple
-			hx-get="/"
-			hx-trigger="uk-select:input"
-			hx-vals="js:{selectedSummoners: selectParamConverter(event)}"
-			hx-boost="true"
-			hx-target="#body"
-		>
-			<option selected value="test">
-				test
-			</option>
-			<option value="test1">
-				test1
-			</option>
-		</uk-select>
-	</div>
+import "github.com/sandrospengler/elotracker/dtos"
+
+templ PlayerSelector(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) {
+<div>
+    <uk-select id="playerSelect" searchable multiple placeholder="Player Name"
+        i18n="selection-count-text: :n: Players Selected" hx-get="/" hx-trigger="uk-select:input"
+        hx-vals="js:{selectedSummoners: selectParamConverter(event)}" hx-boost="true" hx-target="#body">
+        for _, playerName:= range playerNames {
+        if playerName.Selected {
+        <option selected value={ playerName.PlayerName }>
+            { playerName.PlayerName }
+        </option>
+        } else {
+        <option value={ playerName.PlayerName }>
+            { playerName.PlayerName }
+        </option>
+        }
+        }
+    </uk-select>
+</div>
 }

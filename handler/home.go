@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/sandrospengler/elotracker/dtos"
@@ -32,11 +33,10 @@ type leagueRow struct {
 }
 
 func (h HomeHandler) HandleHomeShow(c echo.Context) error {
-	selectedSummoners := c.QueryParam("selectedSummoners")
-
-	log.Println(selectedSummoners)
+	selectedSummonersQuery := c.QueryParam("selectedSummoners")
 
 	var summonerDtos []dtos.SummonerDto
+	var playerNameDtos []dtos.PlayerNameDto
 
 	summonerStmt := SELECT(
 		table.Summoner.AllColumns,
@@ -62,9 +62,15 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 	)
 
 	summonerRows := []summonerRow{}
+	summonerRowsSelected := []summonerRow{}
 	leagueRows := []leagueRow{}
 
 	err := summonerStmt.Query(database.DB, &summonerRows)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = summonerStmt.Query(database.DB, &summonerRowsSelected)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -74,9 +80,22 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 		log.Fatal(err)
 	}
 
-	summonerRows = *sortByMostRecentMatch(&summonerRows)
+	// filter by selected summoners
+	if selectedSummonersQuery != "" {
+		filteredRow := make([]summonerRow, 0)
 
-	for _, row := range summonerRows {
+		for i, row := range summonerRows {
+			if strings.Contains(selectedSummonersQuery, row.Socials.PlayerName) {
+				filteredRow = append(filteredRow, summonerRows[i])
+			}
+		}
+
+		summonerRowsSelected = filteredRow
+	}
+
+	summonerRowsSelected = *sortByMostRecentMatch(&summonerRowsSelected)
+
+	for _, row := range summonerRowsSelected {
 		summonerDto := dtos.SummonerDto{}
 		socialsDto := dtos.SocialsDto{}
 
@@ -137,7 +156,25 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 		summonerDtos = append(summonerDtos, summonerDto)
 	}
 
-	return render(c, home.Home(summonerDtos))
+	uniquePlayerNames := make(map[string]dtos.PlayerNameDto)
+
+	for _, row := range summonerRows {
+		if _, exist := uniquePlayerNames[row.Socials.PlayerName]; !exist {
+			playerNameDto := dtos.PlayerNameDto{}
+
+			playerNameDto.PlayerName = row.Socials.PlayerName
+			playerNameDto.Selected = false
+
+			if strings.Contains(selectedSummonersQuery, row.Socials.PlayerName) {
+				playerNameDto.Selected = true
+			}
+
+			uniquePlayerNames[row.Socials.PlayerName] = playerNameDto
+			playerNameDtos = append(playerNameDtos, playerNameDto)
+		}
+	}
+
+	return render(c, home.Home(summonerDtos, playerNameDtos))
 }
 
 func sortByMostRecentMatch(rows *[]summonerRow) *[]summonerRow {
