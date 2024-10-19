@@ -1,19 +1,23 @@
 function selectParamConverter(event, urlParamName) {
-	let values = event.detail.value;
-	let url = new URL(location.href);
+    let values = event.detail.value;
+    let url = new URL(location.href);
 
-	url.searchParams.delete(urlParamName);
+    url.searchParams.delete(urlParamName);
 
-	if (values.length === 0) {
-		history.pushState(null, null, url.toString());
+    if (Array.isArray(values)) {
+        if (values.length > 0) {
+            url.searchParams.set(urlParamName, values.join(","));
+        }
+    }
 
-		return "";
-	}
+    if (event.detail && typeof event.detail === 'object' && !Array.isArray(values)) {
+        url.searchParams.set(urlParamName, values)
+    }
 
-	url.searchParams.set(urlParamName, values.join(","));
+    let params = Object.fromEntries(url.searchParams.entries());
 
-	// history.pushState(null, null, `?${urlParamName}=${values}`);
-	history.pushState(null, null, url.toString());
+    history.pushState(null, null, url.toString());
 
-	return values.toString();
+    return params;
 }
+

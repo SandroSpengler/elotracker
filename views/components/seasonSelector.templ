@@ -1,0 +1,33 @@
+package components
+
+import (
+	"github.com/sandrospengler/elotracker/dtos"
+	"strconv"
+)
+
+templ SeasonSelector(seasons []dtos.SeasonDto) {
+	<div class="uk-width-1-2 uk-width-1-4@m">
+		<uk-select
+			id="seasonSelect"
+			searchable
+			placeholder="Season"
+			hx-get="/"
+			hx-trigger="uk-select:input"
+			hx-vals="js:{...selectParamConverter(event, 'selectedRankedSeason')}"
+			hx-boost="true"
+			hx-target="#body"
+		>
+			for _, season := range seasons {
+				if season.Selected {
+					<option selected value={ strconv.FormatInt(int64(season.Rid), 10) }>
+						{ season.RankedSeasonString } { strconv.FormatInt(int64(season.Rid), 10) }
+					</option>
+				} else {
+					<option value={ strconv.FormatInt(int64(season.Rid), 10) }>
+						{ season.RankedSeasonString } { strconv.FormatInt(int64(season.Rid), 10) }
+					</option>
+				}
+			}
+		</uk-select>
+	</div>
+}

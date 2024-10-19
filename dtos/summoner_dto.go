@@ -37,3 +37,11 @@ type PlayerNameDto struct {
 	PlayerName string
 	Selected   bool
 }
+
+type SeasonDto struct {
+	RankedSeasonString string
+	Rid                int32
+	SeasonId           int32
+	SplitId            int32
+	Selected           bool
+}

@@ -2,11 +2,13 @@ module github.com/sandrospengler/elotracker
 
 go 1.22.7
 
-require github.com/labstack/echo/v4 v4.12.0
+require (
+	github.com/iancoleman/strcase v0.3.0
+	github.com/labstack/echo/v4 v4.12.0
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/iancoleman/strcase v0.3.0 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect

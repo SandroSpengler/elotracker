@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.Component {
+func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto, seasons []dtos.SeasonDto) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -53,11 +53,19 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = components.PlayerSelector(summoners, playerNames).Render(ctx, templ_7745c5c3_Buffer)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"uk-grid uk-grid-small data-uk-grid-match\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" <div class=\"uk-grid uk-grid-small data-uk-grid-match\">")
+			templ_7745c5c3_Err = components.PlayerSelector(playerNames).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = components.SeasonSelector(seasons).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div class=\"uk-grid uk-grid-small data-uk-grid-match\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -67,10 +75,9 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
-				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(
-					summoner.SumonerProfileIconUrl)
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(summoner.SumonerProfileIconUrl)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 25, Col: 66}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 31, Col: 48}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -83,7 +90,7 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.FormatInt(summoner.SummonerLevel, 10))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 28, Col: 83}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 36, Col: 59}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -96,7 +103,7 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(summoner.GameName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 34, Col: 96}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 42, Col: 75}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -109,7 +116,7 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(summoner.TagLine)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 35, Col: 97}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 43, Col: 76}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
@@ -127,7 +134,7 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 					var templ_7745c5c3_Var7 string
 					templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.FormatInt(int64(summoner.League.Wins), 10))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 40, Col: 87}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 48, Col: 64}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 					if templ_7745c5c3_Err != nil {
@@ -140,7 +147,7 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 					var templ_7745c5c3_Var8 string
 					templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.FormatInt(int64(summoner.League.Losses), 10))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 43, Col: 89}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 51, Col: 66}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 					if templ_7745c5c3_Err != nil {
@@ -153,7 +160,7 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 					var templ_7745c5c3_Var9 string
 					templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.FormatFloat(float64(summoner.Winrate*100), 'f', 0, 64))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 51, Col: 102}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 59, Col: 79}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 					if templ_7745c5c3_Err != nil {
@@ -174,11 +181,10 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var10 string
-					templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(
-						fmt.Sprintf("https://opgg-static.akamaized.net/images/medals_new/%s.png?image=q_auto,f_webp,w_144&v=1714040186300",
-							summoner.League.Tier))
+					templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("https://opgg-static.akamaized.net/images/medals_new/%s.png?image=q_auto,f_webp,w_144&v=1714040186300",
+						summoner.League.Tier))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 63, Col: 57}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 73, Col: 57}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 					if templ_7745c5c3_Err != nil {
@@ -191,7 +197,7 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 					var templ_7745c5c3_Var11 string
 					templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(summoner.League.Tier)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 68, Col: 86}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 79, Col: 66}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 					if templ_7745c5c3_Err != nil {
@@ -204,7 +210,7 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 					var templ_7745c5c3_Var12 string
 					templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(summoner.League.Rank)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 69, Col: 86}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 80, Col: 66}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 					if templ_7745c5c3_Err != nil {
@@ -217,7 +223,7 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 					var templ_7745c5c3_Var13 string
 					templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.FormatInt(int64(summoner.League.LeaguePoints), 10))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 73, Col: 95}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home/home.templ`, Line: 84, Col: 72}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 					if templ_7745c5c3_Err != nil {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -32,11 +33,22 @@ type leagueRow struct {
 	model.League
 }
 
+type seasonRow struct {
+	model.RankedSeason
+	model.SummonerMatches
+}
+
 func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 	selectedSummonersQuery := c.QueryParam("selectedSummoners")
+	selectedRankSeasonQuery, err := strconv.ParseInt(c.QueryParam("selectedRankedSeason"), 10, 32)
+	if err != nil {
+		log.Println(err)
+		selectedRankSeasonQuery = 0
+	}
 
 	var summonerDtos []dtos.SummonerDto
 	var playerNameDtos []dtos.PlayerNameDto
+	var seasonDtos []dtos.SeasonDto
 
 	summonerStmt := SELECT(
 		table.Summoner.AllColumns,
@@ -61,11 +73,23 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 		table.League.LastLeagueUpdate.DESC(),
 	)
 
+	seasonStmt := SELECT(
+		table.RankedSeason.AllColumns,
+		table.SummonerMatches.AllColumns,
+	).FROM(
+		table.RankedSeason.
+			LEFT_JOIN(table.SummonerMatches, table.SummonerMatches.GameEndTime.
+				BETWEEN(table.RankedSeason.StartDate, table.RankedSeason.EndDate)),
+	).WHERE(
+		table.SummonerMatches.MatchID.IS_NOT_NULL(),
+	)
+
 	summonerRows := []summonerRow{}
 	summonerRowsSelected := []summonerRow{}
 	leagueRows := []leagueRow{}
+	seasonRows := []seasonRow{}
 
-	err := summonerStmt.Query(database.DB, &summonerRows)
+	err = summonerStmt.Query(database.DB, &summonerRows)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,6 +100,11 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 	}
 
 	err = leagueStmt.Query(database.DB, &leagueRows)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = seasonStmt.Query(database.DB, &seasonRows)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -174,7 +203,32 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 		}
 	}
 
-	return render(c, home.Home(summonerDtos, playerNameDtos))
+	uniqueSeasons := make(map[int32]dtos.SeasonDto)
+
+	for _, row := range seasonRows {
+		if _, exist := uniqueSeasons[row.Rid]; !exist {
+			seasonDto := dtos.SeasonDto{}
+
+			seasonDto.Rid = row.Rid
+			seasonDto.SeasonId = row.RankedSeasonID
+			seasonDto.SplitId = row.SplitID
+			seasonDto.Selected = false
+			seasonDto.RankedSeasonString = createRankedSeasonString(seasonDto.SeasonId, seasonDto.SplitId)
+
+			if int32(selectedRankSeasonQuery) == seasonDto.Rid {
+				seasonDto.Selected = true
+			}
+
+			uniqueSeasons[row.Rid] = seasonDto
+			seasonDtos = append(seasonDtos, seasonDto)
+		}
+	}
+
+	sort.Slice(seasonDtos, func(i, j int) bool {
+		return seasonDtos[i].Rid > seasonDtos[j].Rid
+	})
+
+	return render(c, home.Home(summonerDtos, playerNameDtos, seasonDtos))
 }
 
 func sortByMostRecentMatch(rows *[]summonerRow) *[]summonerRow {
@@ -239,4 +293,8 @@ func DerefString(s *string) string {
 	}
 
 	return ""
+}
+
+func createRankedSeasonString(seasonId int32, splitId int32) string {
+	return fmt.Sprintf("Season %d-%d", seasonId, splitId)
 }
