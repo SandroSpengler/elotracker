@@ -1,19 +1,28 @@
-window.onload = function() {
-    let htmlElement = document.documentElement;
+window.onload = function () {
+	let mode = loadTheme();
+	replaceIcons(mode);
 
-    let mode = localStorage.getItem("mode");
+	document.body.addEventListener("htmx:afterSwap", () => {
+		// idk maybe wrong event but it triggers too early
+		setTimeout(() => {
+			replaceIcons(mode);
+		}, 100);
+	});
+};
 
+function loadTheme(mode) {
+	let mode_storage = localStorage.getItem("mode");
+	let htmlElement = document.documentElement;
 
-    if (!mode) {
-        htmlElement.classList.add("dark");
-        localStorage.setItem("mode", "dark");
-        mode = "dark";
+	if (!mode) {
+		htmlElement.classList.add("dark");
+		localStorage.setItem("mode", "dark");
+		mode = "dark";
 
-        replaceIcons(mode)
-    }
+		replaceIcons(mode_storage);
+	}
 
-    mode === "dark" ? htmlElement.classList.add("dark") : htmlElement.classList.remove("dark");
+	mode === "dark" ? htmlElement.classList.add("dark") : htmlElement.classList.remove("dark");
 
-    replaceIcons(mode)
-
+	return mode;
 }

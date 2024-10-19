@@ -1,23 +1,37 @@
 package components
 
-import "github.com/sandrospengler/elotracker/dtos"
+import (
+	"github.com/iancoleman/strcase"
+	"github.com/sandrospengler/elotracker/dtos"
+)
 
 templ PlayerSelector(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) {
-<div>
-    <uk-select id="playerSelect" searchable multiple placeholder="Player Name"
-        i18n="selection-count-text: :n: Players Selected" hx-get="/" hx-trigger="uk-select:input"
-        hx-vals="js:{selectedSummoners: selectParamConverter(event)}" hx-boost="true" hx-target="#body">
-        for _, playerName:= range playerNames {
-        if playerName.Selected {
-        <option selected value={ playerName.PlayerName }>
-            { playerName.PlayerName }
-        </option>
-        } else {
-        <option value={ playerName.PlayerName }>
-            { playerName.PlayerName }
-        </option>
-        }
-        }
-    </uk-select>
-</div>
+	<div class="uk-grid uk-grid-small data-uk-grid-match">
+		<div class="uk-width-1-2 uk-width-1-4@m">
+			<uk-select
+				id="playerSelect"
+				searchable
+				multiple
+				placeholder="Player Name"
+				i18n="selection-count-text: :n: Players Selected"
+				hx-get="/"
+				hx-trigger="uk-select:input"
+				hx-vals="js:{selectedSummoners: selectParamConverter(event, 'selectedSummoners')}"
+				hx-boost="true"
+				hx-target="#body"
+			>
+				for _, playerName:= range playerNames {
+					if playerName.Selected {
+						<option selected value={ playerName.PlayerName }>
+							{ strcase.ToCamel(playerName.PlayerName) }
+						</option>
+					} else {
+						<option value={ playerName.PlayerName }>
+							{ strcase.ToCamel(playerName.PlayerName) }
+						</option>
+					}
+				}
+			</uk-select>
+		</div>
+	</div>
 }

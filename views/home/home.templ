@@ -11,10 +11,10 @@ import (
 templ Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) {
 @layout.Header()
 @layout.Base() {
+@components.PlayerSelector(summoners, playerNames)
 <div class="uk-grid uk-grid-small data-uk-grid-match">
-    @components.PlayerSelector(summoners, playerNames)
     for _, summoner := range summoners {
-    <div class="uk-width-1-1 uk-grid-margin">
+    <div class="uk-width-1-1 uk-grid-margin-small">
         <div class="uk-card uk-card-body uk-card-default group cursor-pointer">
             <div class="flex justify-between">
                 <div>

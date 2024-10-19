@@ -53,16 +53,16 @@ func Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto) templ.
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"uk-grid uk-grid-small data-uk-grid-match\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
 			templ_7745c5c3_Err = components.PlayerSelector(summoners, playerNames).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" <div class=\"uk-grid uk-grid-small data-uk-grid-match\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 			for _, summoner := range summoners {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"uk-width-1-1 uk-grid-margin\"><div class=\"uk-card uk-card-body uk-card-default group cursor-pointer\"><div class=\"flex justify-between\"><div><div class=\"flex gap-x-2\"><div><div class=\"relative text-center\"><img class=\"w-14 h-14 md:w-20 md:h-20 rounded-xl\" class loading=\"lazy\" src=\"")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"uk-width-1-1 uk-grid-margin-small\"><div class=\"uk-card uk-card-body uk-card-default group cursor-pointer\"><div class=\"flex justify-between\"><div><div class=\"flex gap-x-2\"><div><div class=\"relative text-center\"><img class=\"w-14 h-14 md:w-20 md:h-20 rounded-xl\" class loading=\"lazy\" src=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
