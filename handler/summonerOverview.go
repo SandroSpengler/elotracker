@@ -55,6 +55,8 @@ func (h SummonerOverviewHandler) HandleSummonerOverviewShow(c echo.Context) erro
 	var unrankedSummonerDtos []dtos.SummonerDto
 	var playerNameDtos []dtos.PlayerNameDto
 
+	selectedRankSeasonQuery = prepareRankedSeasonRows(rankedSeasonRows, selectedRankSeasonQuery)
+
 	prepareSummonerDtos(
 		&rankedSummonerDtos,
 		&unrankedSummonerDtos,
@@ -62,10 +64,6 @@ func (h SummonerOverviewHandler) HandleSummonerOverviewShow(c echo.Context) erro
 		selectedSummonersQuery,
 		selectedRankSeasonQuery,
 	)
-
-	selectedRankSeasonQuery = prepareRankedSeasonRows(rankedSeasonRows, selectedRankSeasonQuery)
-
-	fmt.Println(len(rankedSummonerDtos))
 
 	return render(c, overview.SummonerOverview(rankedSummonerDtos, unrankedSummonerDtos))
 }
