@@ -1,14 +1,17 @@
 package home
 
 import (
-	"fmt"
 	"github.com/sandrospengler/elotracker/dtos"
 	"github.com/sandrospengler/elotracker/views/components"
 	"github.com/sandrospengler/elotracker/views/layout"
-	"strconv"
 )
 
-templ Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto, seasons []dtos.SeasonDto) {
+templ Home(
+	rankedSummoners []dtos.SummonerDto,
+	unrankedSummoners []dtos.SummonerDto,
+	playerNames []dtos.PlayerNameDto,
+	seasons []dtos.SeasonDto,
+) {
 	@layout.Header()
 	@layout.Base() {
 		<div class="uk-grid uk-grid-small data-uk-grid-match">
@@ -16,83 +19,8 @@ templ Home(summoners []dtos.SummonerDto, playerNames []dtos.PlayerNameDto, seaso
 			@components.SeasonSelector(seasons)
 		</div>
 		<div class="uk-grid uk-grid-small data-uk-grid-match">
-			for _, summoner := range summoners {
-				<div class="uk-width-1-1 uk-grid-margin-small">
-					<div class="uk-card uk-card-body uk-card-default group cursor-pointer">
-						<div class="flex justify-between">
-							<div>
-								<div class="flex gap-x-2">
-									<div>
-										<div class="relative text-center">
-											<img
-												class="w-14 h-14 md:w-20 md:h-20 rounded-xl"
-												class
-												loading="lazy"
-												src={ summoner.SumonerProfileIconUrl }
-											/>
-											<p
-												class="absolute bottom-0 inset-x-0 rounded-xl uk-background-default w-6/12 md:w-4/12 mx-auto text-xs md:text-sm"
-											>
-												{ strconv.FormatInt(summoner.SummonerLevel, 10) }
-											</p>
-										</div>
-									</div>
-									<div>
-										<div class="flex gap-x-1 md:gap-x-2">
-											<p class="uk-text-bold text-sm md:text-base">{ summoner.GameName }</p>
-											<p class="uk-text-muted text-sm md:text-base">#{ summoner.TagLine }</p>
-										</div>
-										if summoner.HasRankedSolo5x5 {
-											<div class="flex gap-x-1">
-												<div class="text-xs md:text-base">
-													{ strconv.FormatInt(int64(summoner.League.Wins),10) }W
-												</div>
-												<div class="text-xs md:text-base">
-													{ strconv.FormatInt(int64(summoner.League.Losses),10) }L
-												</div>
-											</div>
-											<div class="flex gap-x-1">
-												<div class="uk-text-muted text-sm md:text-base">
-													Winrate
-												</div>
-												<div class="text-sm md:text-base">
-													{ strconv.FormatFloat(float64(summoner.Winrate * 100), 'f', 0, 64) }%
-												</div>
-											</div>
-										}
-									</div>
-								</div>
-								if summoner.HasRankedSolo5x5 {
-									<div class="flex gap-x-2 mt-2 items-center">
-										<div>
-											<div class="">
-												<img
-													class="w-14 h-14 md:w-20 md:h-20 rounded-xl"
-													loading="lazy"
-													src={ fmt.Sprintf("https://opgg-static.akamaized.net/images/medals_new/%s.png?image=q_auto,f_webp,w_144&v=1714040186300",
-                                    summoner.League.Tier) }
-												/>
-											</div>
-										</div>
-										<div>
-											<div class="flex gap-x-1 md:gap-x-2">
-												<p class="text-xs md:text-base">{ summoner.League.Tier }</p>
-												<p class="text-xs md:text-base">{ summoner.League.Rank }</p>
-											</div>
-											<div class="flex gap-x-1 md:gap-x-2">
-												<p class="text-xs md:text-base">
-													{ strconv.FormatInt(int64(summoner.League.LeaguePoints),10) } LP
-												</p>
-											</div>
-										</div>
-									</div>
-								}
-							</div>
-							@components.SocialIcons(summoner)
-						</div>
-					</div>
-				</div>
-			}
+			@components.SummonerList(rankedSummoners)
+			@components.SummonerList(unrankedSummoners)
 		</div>
 	}
 }

@@ -38,7 +38,12 @@ type seasonRow struct {
 	model.SummonerMatches
 }
 
+type rankedSeasonRow struct {
+	model.RankedSeason
+}
+
 func (h HomeHandler) HandleHomeShow(c echo.Context) error {
+
 	selectedSummonersQuery := c.QueryParam("selectedSummoners")
 	selectedRankSeasonQuery, err := strconv.ParseInt(c.QueryParam("selectedRankedSeason"), 10, 32)
 	if err != nil {
@@ -46,9 +51,34 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 		selectedRankSeasonQuery = 0
 	}
 
-	var summonerDtos []dtos.SummonerDto
+	summonerRows := []summonerRow{}
+	summonerRowsSelected := []summonerRow{}
+	leagueRows := []leagueRow{}
+	seasonRows := []seasonRow{}
+	rankedSeasonRows := []rankedSeasonRow{}
+
+	var rankedSummonerDtos []dtos.SummonerDto
+	var unrankedSummonerDtos []dtos.SummonerDto
 	var playerNameDtos []dtos.PlayerNameDto
 	var seasonDtos []dtos.SeasonDto
+
+	if selectedRankSeasonQuery == 0 {
+
+		rankedSeasonStmt := SELECT(
+			table.RankedSeason.Rid,
+		).FROM(
+			table.RankedSeason,
+		).ORDER_BY(
+			table.RankedSeason.Rid.DESC(),
+		).LIMIT(1)
+
+		err = rankedSeasonStmt.Query(database.DB, &rankedSeasonRows)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		selectedRankSeasonQuery = int64(rankedSeasonRows[0].Rid)
+	}
 
 	summonerStmt := SELECT(
 		table.Summoner.AllColumns,
@@ -64,11 +94,18 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 
 	leagueStmt := SELECT(
 		table.League.AllColumns,
+		table.RankedSeason.AllColumns,
 	).FROM(
-		table.League,
+		table.League.
+			CROSS_JOIN(table.RankedSeason),
 	).WHERE(
-		table.League.QueueType.EQ(String("RANKED_SOLO_5x5")).
-			AND(table.League.LastLeagueUpdate.GT(Timestamp(2024, 9, 25, 8, 0, 0))),
+		table.League.QueueType.EQ(String("RANKED_SOLO_5x5")).AND(
+			table.RankedSeason.Rid.EQ(Int(selectedRankSeasonQuery)),
+		).AND(
+			table.League.LastLeagueUpdate.BETWEEN(
+				table.RankedSeason.StartDate, table.RankedSeason.EndDate,
+			),
+		),
 	).ORDER_BY(
 		table.League.LastLeagueUpdate.DESC(),
 	)
@@ -83,11 +120,6 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 	).WHERE(
 		table.SummonerMatches.MatchID.IS_NOT_NULL(),
 	)
-
-	summonerRows := []summonerRow{}
-	summonerRowsSelected := []summonerRow{}
-	leagueRows := []leagueRow{}
-	seasonRows := []seasonRow{}
 
 	err = summonerStmt.Query(database.DB, &summonerRows)
 	if err != nil {
@@ -180,9 +212,12 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 			summonerDto.HasRankedSolo5x5 = true
 			summonerDto.League = summonerLeagues[0]
 			summonerDto.Winrate = calculateWinrate(summonerDto.League.Wins, summonerDto.League.Losses)
+
+			rankedSummonerDtos = append(rankedSummonerDtos, summonerDto)
+		} else {
+			unrankedSummonerDtos = append(unrankedSummonerDtos, summonerDto)
 		}
 
-		summonerDtos = append(summonerDtos, summonerDto)
 	}
 
 	uniquePlayerNames := make(map[string]dtos.PlayerNameDto)
@@ -228,7 +263,7 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 		return seasonDtos[i].Rid > seasonDtos[j].Rid
 	})
 
-	return render(c, home.Home(summonerDtos, playerNameDtos, seasonDtos))
+	return render(c, home.Home(rankedSummonerDtos, unrankedSummonerDtos, playerNameDtos, seasonDtos))
 }
 
 func sortByMostRecentMatch(rows *[]summonerRow) *[]summonerRow {
