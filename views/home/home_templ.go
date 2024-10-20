@@ -12,6 +12,7 @@ import (
 	"github.com/sandrospengler/elotracker/dtos"
 	"github.com/sandrospengler/elotracker/views/components"
 	"github.com/sandrospengler/elotracker/views/layout"
+	"github.com/sandrospengler/elotracker/views/overview"
 )
 
 func Home(
@@ -68,19 +69,11 @@ func Home(
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div class=\"uk-grid uk-grid-small data-uk-grid-match\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = components.SummonerList(rankedSummoners).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = components.SummonerList(unrankedSummoners).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = overview.SummonerOverview(rankedSummoners, unrankedSummoners).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

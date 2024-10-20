@@ -34,7 +34,7 @@ func PlayerSelector(playerNames []dtos.PlayerNameDto) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"uk-width-1-2 uk-width-1-4@m\"><uk-select id=\"playerSelect\" searchable multiple placeholder=\"Player Name\" i18n=\"selection-count-text: :n: Players Selected\" hx-get=\"/\" hx-trigger=\"uk-select:input\" hx-vals=\"js:{...selectParamConverter(event, &#39;selectedSummoners&#39;)}\" hx-boost=\"true\" hx-target=\"#body\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"uk-width-1-2 uk-width-1-4@m\"><uk-select id=\"playerSelect\" searchable multiple placeholder=\"Player Name\" i18n=\"selection-count-text: :n: Players Selected\" hx-get=\"/summoner-overview\" hx-target=\"#summonerOverview\" hx-trigger=\"uk-select:input\" hx-vals=\"js:{...selectParamConverter(event, &#39;selectedSummoners&#39;)}\" hx-boost=\"true\" hx-target=\"#body\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -47,7 +47,7 @@ func PlayerSelector(playerNames []dtos.PlayerNameDto) templ.Component {
 				var templ_7745c5c3_Var2 string
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(playerName.PlayerName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/playerSelector.templ`, Line: 24, Col: 51}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/playerSelector.templ`, Line: 25, Col: 51}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
@@ -60,7 +60,7 @@ func PlayerSelector(playerNames []dtos.PlayerNameDto) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strcase.ToCamel(playerName.PlayerName))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/playerSelector.templ`, Line: 25, Col: 46}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/playerSelector.templ`, Line: 26, Col: 46}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -78,7 +78,7 @@ func PlayerSelector(playerNames []dtos.PlayerNameDto) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(playerName.PlayerName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/playerSelector.templ`, Line: 28, Col: 42}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/playerSelector.templ`, Line: 29, Col: 42}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -91,7 +91,7 @@ func PlayerSelector(playerNames []dtos.PlayerNameDto) templ.Component {
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(strcase.ToCamel(playerName.PlayerName))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/playerSelector.templ`, Line: 29, Col: 46}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/playerSelector.templ`, Line: 30, Col: 46}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {

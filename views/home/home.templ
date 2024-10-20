@@ -4,6 +4,7 @@ import (
 	"github.com/sandrospengler/elotracker/dtos"
 	"github.com/sandrospengler/elotracker/views/components"
 	"github.com/sandrospengler/elotracker/views/layout"
+	"github.com/sandrospengler/elotracker/views/overview"
 )
 
 templ Home(
@@ -18,9 +19,6 @@ templ Home(
 			@components.PlayerSelector(playerNames)
 			@components.SeasonSelector(seasons)
 		</div>
-		<div class="uk-grid uk-grid-small data-uk-grid-match">
-			@components.SummonerList(rankedSummoners)
-			@components.SummonerList(unrankedSummoners)
-		</div>
+		@overview.SummonerOverview(rankedSummoners, unrankedSummoners)
 	}
 }

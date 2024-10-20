@@ -36,9 +36,11 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.Logger())
 
-	userHandler := handler.HomeHandler{}
+	homeHandler := handler.HomeHandler{}
+	summonerOverviewHandler := handler.SummonerOverviewHandler{}
 
-	e.GET("/", userHandler.HandleHomeShow)
+	e.GET("/", homeHandler.HandleHomeShow)
+	e.GET("/summoner-overview", summonerOverviewHandler.HandleSummonerOverviewShow)
 	e.Static("/assets", "assets")
 
 	e.Start(":5555")

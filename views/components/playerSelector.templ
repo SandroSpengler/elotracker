@@ -13,7 +13,8 @@ templ PlayerSelector(playerNames []dtos.PlayerNameDto) {
 			multiple
 			placeholder="Player Name"
 			i18n="selection-count-text: :n: Players Selected"
-			hx-get="/"
+			hx-get="/summoner-overview"
+			hx-target="#summonerOverview"
 			hx-trigger="uk-select:input"
 			hx-vals="js:{...selectParamConverter(event, 'selectedSummoners')}"
 			hx-boost="true"

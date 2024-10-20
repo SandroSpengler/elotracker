@@ -1,0 +1,16 @@
+package overview
+
+import (
+	"github.com/sandrospengler/elotracker/dtos"
+	"github.com/sandrospengler/elotracker/views/components"
+)
+
+templ SummonerOverview(
+	rankedSummoners []dtos.SummonerDto,
+	unrankedSummoners []dtos.SummonerDto,
+) {
+	<div id="summonerOverview" class="uk-grid uk-grid-small data-uk-grid-match">
+		@components.SummonerList(rankedSummoners)
+		@components.SummonerList(unrankedSummoners)
+	</div>
+}
