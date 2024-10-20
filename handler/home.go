@@ -62,21 +62,20 @@ func (h HomeHandler) HandleHomeShow(c echo.Context) error {
 	var playerNameDtos []dtos.PlayerNameDto
 	var seasonDtos []dtos.SeasonDto
 
-	if selectedRankSeasonQuery == 0 {
+	rankedSeasonStmt := SELECT(
+		table.RankedSeason.Rid,
+	).FROM(
+		table.RankedSeason,
+	).ORDER_BY(
+		table.RankedSeason.Rid.DESC(),
+	).LIMIT(1)
 
-		rankedSeasonStmt := SELECT(
-			table.RankedSeason.Rid,
-		).FROM(
-			table.RankedSeason,
-		).ORDER_BY(
-			table.RankedSeason.Rid.DESC(),
-		).LIMIT(1)
+	err = rankedSeasonStmt.Query(database.DB, &rankedSeasonRows)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-		err = rankedSeasonStmt.Query(database.DB, &rankedSeasonRows)
-		if err != nil {
-			log.Fatal(err)
-		}
-
+	if selectedRankSeasonQuery == 0 || selectedRankSeasonQuery > int64(rankedSeasonRows[0].Rid) {
 		selectedRankSeasonQuery = int64(rankedSeasonRows[0].Rid)
 	}
 

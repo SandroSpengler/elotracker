@@ -20,11 +20,11 @@ templ SeasonSelector(seasons []dtos.SeasonDto) {
 			for _, season := range seasons {
 				if season.Selected {
 					<option selected value={ strconv.FormatInt(int64(season.Rid), 10) }>
-						{ season.RankedSeasonString } { strconv.FormatInt(int64(season.Rid), 10) }
+						{ season.RankedSeasonString }
 					</option>
 				} else {
 					<option value={ strconv.FormatInt(int64(season.Rid), 10) }>
-						{ season.RankedSeasonString } { strconv.FormatInt(int64(season.Rid), 10) }
+						{ season.RankedSeasonString }
 					</option>
 				}
 			}
